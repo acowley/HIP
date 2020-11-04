@@ -44,8 +44,6 @@ string(REPLACE "." ";" VERSION_LIST ${HIP_BASE_VERSION})
 list(GET VERSION_LIST 0 HIP_VERSION_MAJOR)
 list(GET VERSION_LIST 1 HIP_VERSION_MINOR)
 
-find_package(Git)
-
 # FIXME: Two different version strings used.
 if(GIT_FOUND)
   # get date information based on UTC
