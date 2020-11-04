@@ -46,12 +46,12 @@ __hip_pch_size:
   .long __hip_pch_size - __hip_pch
 EOF
 
-$LLVM_DIR/bin/clang -O3 -c -std=c++17 -isystem $LLVM_DIR/lib/clang/11.0.0/include/.. -isystem /opt/rocm/include -nogpulib --cuda-device-only -x hip $tmp/hip_pch.h -E >$tmp/pch.cui
+clang -O3 -c -std=c++17 -isystem "$PWD/../include" -isystem "$PWD/include" --rocm-path=/nix/store/b2a7sp86gc1iaq21lri6ylihb522fwld-rocclr-3.9.0 -nogpulib --cuda-device-only -x hip $tmp/hip_pch.h -E >$tmp/pch.cui
 
 cat $tmp/hip_macros.h >> $tmp/pch.cui
 
-$LLVM_DIR/bin/clang -cc1 -O3 -emit-pch -triple amdgcn-amd-amdhsa -aux-triple x86_64-unknown-linux-gnu -fcuda-is-device -std=c++17 -fgnuc-version=4.2.1 -o $tmp/hip.pch -x hip-cpp-output - <$tmp/pch.cui
+clang -cc1 -O3 -emit-pch -triple amdgcn-amd-amdhsa -aux-triple x86_64-unknown-linux-gnu -fcuda-is-device -std=c++17 -fgnuc-version=4.2.1 -o $tmp/hip.pch -x hip-cpp-output - <$tmp/pch.cui
 
-$LLVM_DIR/bin/llvm-mc -o hip_pch.o $tmp/hip_pch.mcin --filetype=obj
+llvm-mc -o hip_pch.o $tmp/hip_pch.mcin --filetype=obj
 
 rm -rf $tmp
